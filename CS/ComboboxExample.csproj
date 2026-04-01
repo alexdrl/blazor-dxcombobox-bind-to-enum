@@ -7,8 +7,15 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DevExpress.Blazor" Version="25.1.*-*" />
+    <PackageReference Include="DevExpress.Blazor.Themes" Version="25.1.*-*" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="DXApplication1\**" />
+    <Content Remove="DXApplication1\**" />
+    <EmbeddedResource Remove="DXApplication1\**" />
+    <None Remove="DXApplication1\**" />
   </ItemGroup>
 </Project>

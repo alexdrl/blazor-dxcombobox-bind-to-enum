@@ -1,26 +1,43 @@
-﻿@using System.ComponentModel.DataAnnotations;
-@using Education.Data;
+﻿@using ComboboxExample.Data
 
-<DxComboBox Data="EducationDegrees"
-            TextFieldName="@nameof(EducationDegree.DisplayName)"
-            ValueFieldName="@nameof(EducationDegree.Value)"
-            @bind-Value="Value"
-            AllowUserInput="true"></DxComboBox>
+<DxComboBox Data="People"
+            TextFieldName="@nameof(PersonModel.Name)"
+            ValueFieldName="@nameof(PersonModel.Id)"
+            @bind-Value="SelectedId"
+            ClearButtonDisplayMode="@ClearButtonMode"
+            AllowUserInput="false">
+    <EditBoxTemplate Context="person">
+        @if (!string.IsNullOrEmpty(person?.Name))
+        {
+            <span class="person-label">@person.Name</span>
+        }
+        else
+        {
+            <span class="person-label person-label--empty">(no name)</span>
+        }
+        <DxInputBox />
+    </EditBoxTemplate>
+</DxComboBox>
+
+<p class="mt-2">Selected ID: <strong>@(SelectedId?.ToString() ?? "none")</strong></p>
 
 @code {
-    public List<EducationDegree> EducationDegrees { get; set; } = new List<EducationDegree>();
-    int Value { get; set; } = 0;
+    static readonly List<PersonModel> People = new()
+    {
+        new PersonModel { Id = 1, Name = "Alice Johnson" },
+        new PersonModel { Id = 2, Name = "" },
+        new PersonModel { Id = 3, Name = "Carlos Mendoza" },
+        new PersonModel { Id = 4, Name = null },
+        new PersonModel { Id = 5, Name = "Diana Prince" },
+        new PersonModel { Id = 6, Name = "Evan Wright" },
+    };
 
-    protected override void OnInitialized() {
-        //...
-        EducationDegrees = Enum.GetValues(typeof(EducationType))
-            .OfType<EducationType>()
-            .Select(t => new EducationDegree()
-            {
-                Value = t,
-                DisplayName = t.GetAttribute<DisplayAttribute>().Name
-            }).ToList();
-        base.OnInitialized();
-    }
+    int? SelectedId { get; set; }
 
+    PersonModel? SelectedPerson => People.FirstOrDefault(p => p.Id == SelectedId);
+
+    DataEditorClearButtonDisplayMode ClearButtonMode =>
+        string.IsNullOrEmpty(SelectedPerson?.Name)
+            ? DataEditorClearButtonDisplayMode.Never
+            : DataEditorClearButtonDisplayMode.Auto;
 }
